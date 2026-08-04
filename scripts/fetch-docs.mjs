@@ -2,17 +2,17 @@
 /**
  * Fetch nixops docs into src/docs/nixops/.
  *
+ * Source of truth for structure (sections, ordering) is `docs/sections.json`
+ * inside the nixops repo. This site only renders what the source declares --
+ * no slug-lists live here.
+ *
  * Source resolution order:
  *   1. NIXOPS_DOCS env var (absolute path to a checked-out docs/ dir)
  *   2. ../nixops/docs/ (local sibling checkout, dev convenience)
  *   3. shallow git clone of github:reflection-dev/nixops (CI / Cloudflare)
- *
- * For each source .md we inject YAML front matter (title, order, section,
- * permalink, layout, tags) so 11ty renders it under /docs/nixops/{slug}/.
  */
 import { execSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { mkdtempSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,56 +21,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const DEST = join(ROOT, "src", "docs", "nixops");
 const NIXOPS_REPO = "https://github.com/reflection-dev/nixops.git";
-
-// Sections group the sidebar. Order in this array is display order.
-// Each entry lists the source basenames (without the `.md` and numeric prefix)
-// that belong to that section.
-const SECTIONS = [
-  {
-    name: "Overview",
-    slugs: ["index"],
-  },
-  {
-    name: "Foundations",
-    slugs: [
-      "what-is-nix",
-      "install-nix",
-      "nix-language",
-      "flakes",
-      "nixos-and-modules",
-    ],
-  },
-  {
-    name: "Deploying",
-    slugs: [
-      "sops-nix",
-      "nixos-anywhere",
-      "deploy-rs",
-      "your-first-fleet",
-      "anatomy-of-an-instance",
-    ],
-  },
-  {
-    name: "Operating",
-    slugs: [
-      "day-two-operations",
-      "writing-host-modules",
-      "troubleshooting",
-      "further-reading",
-    ],
-  },
-];
-
-function sectionFor(slug) {
-  for (let i = 0; i < SECTIONS.length; i++) {
-    if (SECTIONS[i].slugs.includes(slug)) {
-      return { name: SECTIONS[i].name, order: i };
-    }
-  }
-  throw new Error(
-    `No section mapping for slug "${slug}" -- add it to SECTIONS in scripts/fetch-docs.mjs`
-  );
-}
+const MANIFEST = "sections.json";
 
 function resolveSource() {
   if (process.env.NIXOPS_DOCS) {
@@ -103,34 +54,39 @@ function resolveSource() {
   };
 }
 
-function tidyTitle(raw) {
-  // "01 -- What Nix is and why it matters" → "What Nix is and why it matters"
-  // "nixops -- Nix for Ops: a zero-to-fleet tutorial" is left as-is.
-  return raw.trim().replace(/^\d+\s*[-–—]{1,2}\s*/, "").replace(/--/g, "—");
+function loadManifest(docsPath) {
+  const p = join(docsPath, MANIFEST);
+  if (!existsSync(p)) {
+    throw new Error(
+      `[fetch-docs] ${MANIFEST} missing in ${docsPath} -- add it to declare ` +
+        `section grouping and page order (see reflection.dev README).`
+    );
+  }
+  const parsed = JSON.parse(readFileSync(p, "utf8"));
+  if (!Array.isArray(parsed)) {
+    throw new Error(`[fetch-docs] ${MANIFEST} must be an array of sections`);
+  }
+  return parsed;
 }
 
-function parseFile(name, raw) {
-  const m = name.match(/^(\d+)[-_.]?(.*)\.md$/);
-  if (!m) throw new Error(`Cannot parse nixops doc filename: ${name}`);
-  const order = Number(m[1]);
-  const slug = m[2] || "index";
+function slugFor(filename) {
+  // "07-nixos-anywhere.md" → "nixos-anywhere"
+  // "00-index.md" → "index" (special-cased downstream)
+  const m = filename.match(/^(?:\d+[-_.])?(.+)\.md$/);
+  if (!m) throw new Error(`Cannot derive slug from ${filename}`);
+  return m[1];
+}
 
-  const h1 = raw.match(/^#\s+(.+?)\s*$/m);
-  const title = tidyTitle(h1 ? h1[1] : slug);
-
-  const isIndex = slug === "index";
-  const permalink = isIndex ? "/docs/nixops/" : `/docs/nixops/${slug}/`;
-  const section = sectionFor(slug);
-
-  return { order, slug, title, permalink, isIndex, section };
+function tidyTitle(raw) {
+  return raw.trim().replace(/^\d+\s*[-–—]{1,2}\s*/, "").replace(/--/g, "—");
 }
 
 function rewriteLinks(body, docs) {
   return body.replace(
-    /\]\((\d+[-_.][a-z0-9-_]+|00-index)\.md(#[^)]*)?\)/gi,
-    (_, filename, anchor) => {
-      const target = docs.find((d) => d.sourceBase === filename);
-      if (!target) return `](${filename}.md${anchor ?? ""})`;
+    /\]\(([^)]+?)\.md(#[^)]*)?\)/gi,
+    (whole, ref, anchor) => {
+      const target = docs.find((d) => d.filename === `${ref}.md`);
+      if (!target) return whole;
       return `](${target.permalink}${anchor ?? ""})`;
     }
   );
@@ -140,16 +96,55 @@ function main() {
   const src = resolveSource();
   console.log(`[fetch-docs] source: ${src.origin} (${src.path})`);
 
-  const files = readdirSync(src.path)
-    .filter((f) => /^\d+[-_.].*\.md$/.test(f))
-    .sort();
-  if (!files.length) throw new Error(`No matching docs in ${src.path}`);
+  const manifest = loadManifest(src.path);
 
-  const docs = files.map((f) => {
-    const raw = readFileSync(join(src.path, f), "utf8");
-    const meta = parseFile(f, raw);
-    return { ...meta, sourceBase: f.replace(/\.md$/, ""), raw };
+  // Flatten manifest into an ordered doc list with section metadata.
+  const docs = [];
+  let globalOrder = 0;
+  manifest.forEach((section, sectionOrder) => {
+    if (!section.name || !Array.isArray(section.docs)) {
+      throw new Error(
+        `[fetch-docs] section entry must be {name, docs: [...]}, got ${JSON.stringify(section)}`
+      );
+    }
+    section.docs.forEach((filename) => {
+      const srcFile = join(src.path, filename);
+      if (!existsSync(srcFile)) {
+        throw new Error(
+          `[fetch-docs] ${MANIFEST} lists ${filename}, but ${srcFile} is missing`
+        );
+      }
+      const slug = slugFor(filename);
+      const isIndex = slug === "index";
+      docs.push({
+        filename,
+        slug,
+        isIndex,
+        section: { name: section.name, order: sectionOrder },
+        order: globalOrder++,
+        permalink: isIndex ? "/docs/nixops/" : `/docs/nixops/${slug}/`,
+        raw: readFileSync(srcFile, "utf8"),
+      });
+    });
   });
+
+  // Warn on stray .md files that exist but aren't declared -- helps catch
+  // manifest drift after a rename.
+  const declared = new Set(docs.map((d) => d.filename));
+  const stray = readdirSync(src.path)
+    .filter((f) => f.endsWith(".md") && !declared.has(f));
+  if (stray.length) {
+    console.warn(
+      `[fetch-docs] warning: ${stray.length} .md file(s) in ${src.path} not in ${MANIFEST}: ` +
+        stray.join(", ")
+    );
+  }
+
+  // Compute titles from H1.
+  for (const doc of docs) {
+    const h1 = doc.raw.match(/^#\s+(.+?)\s*$/m);
+    doc.title = tidyTitle(h1 ? h1[1] : doc.slug);
+  }
 
   rmSync(DEST, { recursive: true, force: true });
   mkdirSync(DEST, { recursive: true });
@@ -173,7 +168,9 @@ function main() {
   }
 
   if (src.cleanup) src.cleanup();
-  console.log(`[fetch-docs] wrote ${docs.length} files to ${DEST}`);
+  console.log(
+    `[fetch-docs] wrote ${docs.length} files (${manifest.length} sections) to ${DEST}`
+  );
 }
 
 main();
