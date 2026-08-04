@@ -8,12 +8,15 @@
     "sync-docs": "node scripts/fetch-docs.mjs",
     "dev": "pnpm sync-docs && eleventy --serve --port 8080",
     "build": "pnpm sync-docs && eleventy",
-    "clean": "rm -rf _site src/docs/nixops"
+    "clean": "rm -rf _site src/docs/nixops",
+    "deploy": "pnpm run build && wrangler deploy",
+    "preview": "pnpm run build && wrangler dev"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
-    "markdown-it-anchor": "^9.2.0"
+    "markdown-it-anchor": "^9.2.0",
+    "wrangler": "^4.0.0"
   },
   "packageManager": "pnpm@11.18.0"
 }
