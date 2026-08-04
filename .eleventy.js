@@ -24,13 +24,59 @@ export default function (eleventyConfig) {
       .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0))
   );
 
-  eleventyConfig.addFilter("stripLeadingNumber", (str) =>
-    (str ?? "").replace(/^\d+[-_.]?/, "")
-  );
+  eleventyConfig.addCollection("nixopsDocsBySection", (api) => {
+    const items = api
+      .getFilteredByTag("nixops-docs")
+      .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+    const groups = new Map();
+    for (const item of items) {
+      const key = item.data.section || "Other";
+      if (!groups.has(key)) {
+        groups.set(key, {
+          name: key,
+          order: item.data.sectionOrder ?? 999,
+          items: [],
+        });
+      }
+      groups.get(key).items.push(item);
+    }
+    return [...groups.values()].sort((a, b) => a.order - b.order);
+  });
 
-  eleventyConfig.addFilter("titleFromSlug", (slug) => {
-    const s = (slug ?? "").replace(/^\d+[-_.]?/, "").replace(/[-_]/g, " ");
-    return s.charAt(0).toUpperCase() + s.slice(1);
+  // Extract H2/H3 with markdown-it-anchor ids from rendered HTML → nested TOC.
+  eleventyConfig.addFilter("toc", (html) => {
+    if (!html) return [];
+    const re = /<h([23])[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g;
+    const out = [];
+    let m;
+    while ((m = re.exec(html)) !== null) {
+      const level = Number(m[1]);
+      const id = m[2];
+      // Strip inline HTML (anchor <a class="header-anchor">) and decode entities.
+      const text = m[3]
+        .replace(/<[^>]+>/g, "")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .trim();
+      out.push({ level, id, text });
+    }
+    return out;
+  });
+
+  eleventyConfig.addFilter("readTime", (content) => {
+    if (!content) return null;
+    const words = String(content).replace(/<[^>]+>/g, "").trim().split(/\s+/).length;
+    const minutes = Math.max(1, Math.round(words / 220));
+    return `${minutes} min read`;
+  });
+
+  eleventyConfig.addFilter("adjacent", (collection, url, offset) => {
+    const idx = collection.findIndex((i) => i.url === url);
+    if (idx < 0) return null;
+    return collection[idx + offset] ?? null;
   });
 
   return {

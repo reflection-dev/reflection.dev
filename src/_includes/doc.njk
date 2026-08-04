@@ -1,0 +1,67 @@
+---
+layout: base.njk
+---
+{% set sections = collections.nixopsDocsBySection %}
+{% set flat = collections.nixopsDocs %}
+{% set prev = flat | adjacent(page.url, -1) %}
+{% set next = flat | adjacent(page.url, 1) %}
+{% set toc = content | toc %}
+
+<article class="doc">
+  <aside class="doc-sidebar">
+    <div class="doc-sidebar-title">nixops</div>
+    <nav class="doc-sidebar-nav">
+      {% for section in sections %}
+        <div class="doc-section">
+          <div class="doc-section-name">{{ section.name }}</div>
+          <ol>
+            {% for item in section.items %}
+              <li{% if item.url == page.url %} class="active"{% endif %}>
+                <a href="{{ item.url }}">{{ item.data.title }}</a>
+              </li>
+            {% endfor %}
+          </ol>
+        </div>
+      {% endfor %}
+    </nav>
+  </aside>
+
+  <div class="doc-body">
+    <header class="doc-header">
+      <div class="doc-eyebrow">{{ section }} · {{ content | readTime }}</div>
+      <h1>{{ title }}</h1>
+    </header>
+
+    <div class="doc-prose">
+      {{ content | safe }}
+    </div>
+
+    <nav class="doc-pager" aria-label="chapter navigation">
+      {% if prev %}
+        <a class="doc-pager-item doc-pager-prev" href="{{ prev.url }}">
+          <span class="doc-pager-label">← Previous</span>
+          <span class="doc-pager-title">{{ prev.data.title }}</span>
+        </a>
+      {% else %}<span></span>{% endif %}
+      {% if next %}
+        <a class="doc-pager-item doc-pager-next" href="{{ next.url }}">
+          <span class="doc-pager-label">Next →</span>
+          <span class="doc-pager-title">{{ next.data.title }}</span>
+        </a>
+      {% else %}<span></span>{% endif %}
+    </nav>
+  </div>
+
+  {% if toc.length %}
+    <aside class="doc-toc" aria-label="on this page">
+      <div class="doc-toc-title">On this page</div>
+      <ol>
+        {% for h in toc %}
+          <li class="doc-toc-h{{ h.level }}">
+            <a href="#{{ h.id }}" data-toc-link>{{ h.text }}</a>
+          </li>
+        {% endfor %}
+      </ol>
+    </aside>
+  {% endif %}
+</article>

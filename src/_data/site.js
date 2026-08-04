@@ -1,5 +1,6 @@
 export default {
-  name: "reflection.dev",
+  name: "Reflection",
+  domain: "reflection.dev",
   url: "https://reflection.dev",
   org: "reflection-dev",
   github: "https://github.com/reflection-dev",
