@@ -1,0 +1,6 @@
+_site/
+node_modules/
+.cache/
+result
+result-*
+src/docs/nixops/

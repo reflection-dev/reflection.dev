@@ -1,0 +1,23 @@
+---
+layout: layouts/base.njk
+title: null
+---
+<section class="hero">
+  <h1>{{ site.name }}</h1>
+</section>
+
+<section>
+  <h2>Projects</h2>
+  <div class="projects">
+    {% for project in site.projects %}
+      <article class="project-card">
+        <h3>{{ project.name }}</h3>
+        <p>{{ project.tagline }}</p>
+        <div class="links">
+          <a href="{{ project.docs }}">Docs →</a>
+          <a href="{{ project.repo }}" rel="noopener">GitHub ↗</a>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>

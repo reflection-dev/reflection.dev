@@ -1,0 +1,19 @@
+{
+  "name": "reflection.dev",
+  "version": "0.1.0",
+  "description": "reflection.dev -- organization site and documentation hub",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync-docs": "node scripts/fetch-docs.mjs",
+    "dev": "pnpm sync-docs && eleventy --serve --port 8080",
+    "build": "pnpm sync-docs && eleventy",
+    "clean": "rm -rf _site src/docs/nixops"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
+    "markdown-it-anchor": "^9.2.0"
+  },
+  "packageManager": "pnpm@11.18.0"
+}

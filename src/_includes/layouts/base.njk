@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% if title %}{{ title }} — {% endif %}{{ site.name }}</title>
+    {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
+    <link rel="stylesheet" href="/assets/style.css" />
+    <script>
+      // No-flash theme setup: run before body paints.
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+          var theme = saved || (prefersLight ? "light" : "dark");
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (_) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="site-title" href="/">{{ site.name }}</a>
+      <nav class="site-nav">
+        <a href="/docs/">docs</a>
+        <a href="{{ site.github }}" rel="noopener">github</a>
+        <button
+          type="button"
+          class="theme-toggle"
+          aria-label="Toggle color theme"
+          data-theme-toggle
+        >
+          <span data-theme-icon-dark>◐</span>
+          <span data-theme-icon-light hidden>◑</span>
+        </button>
+      </nav>
+    </header>
+
+    <main class="site-main">
+      {{ content | safe }}
+    </main>
+
+    <footer class="site-footer">
+      <span>© reflection.dev</span>
+      <span><a href="{{ site.github }}" rel="noopener">github.com/{{ site.org }}</a></span>
+    </footer>
+
+    <script src="/assets/theme.js" defer></script>
+  </body>
+</html>
