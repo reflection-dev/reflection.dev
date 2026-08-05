@@ -2,9 +2,10 @@
 /**
  * Fetch nixops docs into src/docs/nixops/.
  *
- * Source of truth for structure (sections, ordering) is `docs/sections.json`
- * inside the nixops repo. This site only renders what the source declares --
- * no slug-lists live here.
+ * Structure and ordering come from the nixops repo itself: `_meta.json`
+ * files at each folder level declare label + order of children (Nextra
+ * convention). Per-page `prereq/time/outcome` live in each doc's own
+ * YAML front matter.
  *
  * Source resolution order:
  *   1. NIXOPS_DOCS env var (absolute path to a checked-out docs/ dir)
@@ -12,16 +13,18 @@
  *   3. shallow git clone of github:reflection-dev/nixops (CI / Cloudflare)
  */
 import { execSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import matter from "gray-matter";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const DEST = join(ROOT, "src", "docs", "nixops");
 const NIXOPS_REPO = "https://github.com/reflection-dev/nixops.git";
-const MANIFEST = "sections.json";
+const META = "_meta.json";
+const URL_BASE = "/docs/nixops";
 
 function resolveSource() {
   if (process.env.NIXOPS_DOCS) {
@@ -29,12 +32,10 @@ function resolveSource() {
     if (!existsSync(p)) throw new Error(`NIXOPS_DOCS=${p} does not exist`);
     return { path: p, cleanup: null, origin: "NIXOPS_DOCS" };
   }
-
   const sibling = resolve(ROOT, "..", "nixops", "docs");
   if (existsSync(sibling)) {
     return { path: sibling, cleanup: null, origin: "sibling ../nixops/docs" };
   }
-
   const tmp = mkdtempSync(join(tmpdir(), "nixops-docs-"));
   console.log(`[fetch-docs] cloning ${NIXOPS_REPO} into ${tmp}`);
   execSync(`git clone --depth 1 --filter=blob:none ${NIXOPS_REPO} ${tmp}`, {
@@ -54,122 +55,131 @@ function resolveSource() {
   };
 }
 
-function loadManifest(docsPath) {
-  const p = join(docsPath, MANIFEST);
+function loadMeta(dir) {
+  const p = join(dir, META);
   if (!existsSync(p)) {
-    throw new Error(
-      `[fetch-docs] ${MANIFEST} missing in ${docsPath} -- add it to declare ` +
-        `section grouping and page order (see reflection.dev README).`
-    );
+    throw new Error(`[fetch-docs] missing ${META} in ${dir}`);
   }
   const parsed = JSON.parse(readFileSync(p, "utf8"));
-  if (!Array.isArray(parsed)) {
-    throw new Error(`[fetch-docs] ${MANIFEST} must be an array of sections`);
+  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error(`[fetch-docs] ${p} must be a JSON object of {key: label}`);
   }
   return parsed;
 }
 
-function slugFor(filename) {
-  // "07-nixos-anywhere.md" → "nixos-anywhere"
-  // "00-index.md" → "index" (special-cased downstream)
-  const m = filename.match(/^(?:\d+[-_.])?(.+)\.md$/);
-  if (!m) throw new Error(`Cannot derive slug from ${filename}`);
-  return m[1];
+function buildPages(srcRoot) {
+  const rootMeta = loadMeta(srcRoot);
+  const sections = [];
+  let globalOrder = 0;
+  let sectionOrder = 0;
+  const pages = [];
+
+  for (const [sectionSlug, sectionLabel] of Object.entries(rootMeta)) {
+    const sectionDir = join(srcRoot, sectionSlug);
+    if (!existsSync(sectionDir)) {
+      throw new Error(
+        `[fetch-docs] section "${sectionSlug}" declared in root ${META} but ${sectionDir} does not exist`
+      );
+    }
+    const pageMeta = loadMeta(sectionDir);
+    sections.push({ slug: sectionSlug, label: sectionLabel, order: sectionOrder++ });
+
+    for (const [pageSlug, pageLabel] of Object.entries(pageMeta)) {
+      const file = join(sectionDir, `${pageSlug}.md`);
+      if (!existsSync(file)) {
+        throw new Error(
+          `[fetch-docs] ${META} in ${sectionSlug}/ lists "${pageSlug}" but ${file} is missing`
+        );
+      }
+      const isSectionIndex = pageSlug === "index" && sectionSlug === "overview";
+      // Overview/index becomes the docs root landing.
+      const permalink = isSectionIndex
+        ? `${URL_BASE}/`
+        : `${URL_BASE}/${sectionSlug}/${pageSlug}/`;
+      pages.push({
+        sectionSlug,
+        sectionLabel,
+        sectionOrder: sectionOrder - 1,
+        slug: pageSlug,
+        title: pageLabel,
+        order: globalOrder++,
+        isSectionIndex,
+        file,
+        permalink,
+      });
+    }
+  }
+  return { sections, pages };
 }
 
-function tidyTitle(raw) {
-  return raw.trim().replace(/^\d+\s*[-–—]{1,2}\s*/, "").replace(/--/g, "—");
-}
-
-function rewriteLinks(body, docs) {
+function rewriteLinks(body, currentSection, allPages) {
+  // Turn source-relative links (`../foundations/what-is-nix.md` or
+  // `what-is-nix.md`) into site-relative permalinks.
   return body.replace(
-    /\]\(([^)]+?)\.md(#[^)]*)?\)/gi,
-    (whole, ref, anchor) => {
-      const target = docs.find((d) => d.filename === `${ref}.md`);
+    /\]\(((?:\.\.\/)?[a-z0-9-_]+\/)?([a-z0-9-_]+)\.md(#[^)]*)?\)/gi,
+    (whole, prefix, slug, anchor) => {
+      let targetSection;
+      if (!prefix) targetSection = currentSection;
+      else targetSection = prefix.replace(/[./]/g, "").replace(/^\.\.$/, "");
+      const target = allPages.find(
+        (p) => p.slug === slug && p.sectionSlug === targetSection
+      );
       if (!target) return whole;
       return `](${target.permalink}${anchor ?? ""})`;
     }
   );
 }
 
+function yamlValue(v) {
+  return JSON.stringify(v);
+}
+
 function main() {
   const src = resolveSource();
   console.log(`[fetch-docs] source: ${src.origin} (${src.path})`);
 
-  const manifest = loadManifest(src.path);
+  const { sections, pages } = buildPages(src.path);
 
-  // Flatten manifest into an ordered doc list with section metadata.
-  const docs = [];
-  let globalOrder = 0;
-  manifest.forEach((section, sectionOrder) => {
-    if (!section.name || !Array.isArray(section.docs)) {
-      throw new Error(
-        `[fetch-docs] section entry must be {name, docs: [...]}, got ${JSON.stringify(section)}`
-      );
-    }
-    section.docs.forEach((filename) => {
-      const srcFile = join(src.path, filename);
-      if (!existsSync(srcFile)) {
-        throw new Error(
-          `[fetch-docs] ${MANIFEST} lists ${filename}, but ${srcFile} is missing`
-        );
-      }
-      const slug = slugFor(filename);
-      const isIndex = slug === "index";
-      docs.push({
-        filename,
-        slug,
-        isIndex,
-        section: { name: section.name, order: sectionOrder },
-        order: globalOrder++,
-        permalink: isIndex ? "/docs/nixops/" : `/docs/nixops/${slug}/`,
-        raw: readFileSync(srcFile, "utf8"),
-      });
-    });
-  });
-
-  // Warn on stray .md files that exist but aren't declared -- helps catch
-  // manifest drift after a rename.
-  const declared = new Set(docs.map((d) => d.filename));
-  const stray = readdirSync(src.path)
-    .filter((f) => f.endsWith(".md") && !declared.has(f));
-  if (stray.length) {
-    console.warn(
-      `[fetch-docs] warning: ${stray.length} .md file(s) in ${src.path} not in ${MANIFEST}: ` +
-        stray.join(", ")
-    );
-  }
-
-  // Compute titles from H1.
-  for (const doc of docs) {
-    const h1 = doc.raw.match(/^#\s+(.+?)\s*$/m);
-    doc.title = tidyTitle(h1 ? h1[1] : doc.slug);
+  // Parse each page's own front matter (prereq/time/outcome).
+  for (const page of pages) {
+    const raw = readFileSync(page.file, "utf8");
+    const parsed = matter(raw);
+    page.data = parsed.data ?? {};
+    page.body = parsed.content;
   }
 
   rmSync(DEST, { recursive: true, force: true });
   mkdirSync(DEST, { recursive: true });
 
-  for (const doc of docs) {
-    const body = rewriteLinks(doc.raw, docs).replace(/^#\s+.+?\n+/m, "");
-    const frontmatter = [
+  for (const page of pages) {
+    const body = rewriteLinks(page.body, page.sectionSlug, pages)
+      .replace(/^#\s+.+?\n+/m, ""); // strip raw H1 -- layout renders title from frontmatter
+
+    const fm = [
       "---",
-      `title: ${JSON.stringify(doc.title)}`,
-      `order: ${doc.order}`,
-      `section: ${JSON.stringify(doc.section.name)}`,
-      `sectionOrder: ${doc.section.order}`,
-      `permalink: ${doc.permalink}`,
+      `title: ${yamlValue(page.title)}`,
+      `section: ${yamlValue(page.sectionLabel)}`,
+      `sectionSlug: ${yamlValue(page.sectionSlug)}`,
+      `sectionOrder: ${page.sectionOrder}`,
+      `order: ${page.order}`,
+      `permalink: ${page.permalink}`,
       `layout: doc.njk`,
       `tags: nixops-docs`,
-      "---",
-      "",
-    ].join("\n");
-    const destName = doc.isIndex ? "index.md" : `${doc.slug}.md`;
-    writeFileSync(join(DEST, destName), frontmatter + body);
+    ];
+    if (page.data.time) fm.push(`time: ${yamlValue(page.data.time)}`);
+    fm.push("---", "");
+
+    // Preserve source tree under DEST so nothing collides.
+    const destPath = page.isSectionIndex
+      ? join(DEST, "index.md")
+      : join(DEST, page.sectionSlug, `${page.slug}.md`);
+    mkdirSync(dirname(destPath), { recursive: true });
+    writeFileSync(destPath, fm.join("\n") + body);
   }
 
   if (src.cleanup) src.cleanup();
   console.log(
-    `[fetch-docs] wrote ${docs.length} files (${manifest.length} sections) to ${DEST}`
+    `[fetch-docs] wrote ${pages.length} pages across ${sections.length} sections to ${DEST}`
   );
 }
 

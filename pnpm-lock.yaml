@@ -14,6 +14,9 @@ importers:
       '@11ty/eleventy-plugin-syntaxhighlight':
         specifier: ^5.0.0
         version: 5.0.2
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
       markdown-it-anchor:
         specifier: ^9.2.0
         version: 9.2.1(@types/markdown-it@14.1.2)(markdown-it@14.3.0)

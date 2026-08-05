@@ -2,17 +2,17 @@
 layout: base.njk
 wide: true
 ---
-{% set sections = collections.nixopsDocsBySection %}
 {% set flat = collections.nixopsDocs %}
 {% set prev = flat | adjacent(page.url, -1) %}
 {% set next = flat | adjacent(page.url, 1) %}
 {% set toc = content | toc %}
+{% set displayTime = time or (content | readTime) %}
 
 <article class="doc">
   <aside class="doc-sidebar">
     <div class="doc-sidebar-title">nixops</div>
     <nav class="doc-sidebar-nav">
-      {% for group in sections %}
+      {% for group in collections.nixopsDocsBySection %}
         <div class="doc-section">
           <div class="doc-section-name">{{ group.name }}</div>
           <ol>
@@ -29,7 +29,7 @@ wide: true
 
   <div class="doc-body">
     <header class="doc-header">
-      <div class="doc-eyebrow">{{ section }} · {{ content | readTime }}</div>
+      <div class="doc-eyebrow">{{ section }} · {{ displayTime }}</div>
       <h1>{{ title }}</h1>
     </header>
 
