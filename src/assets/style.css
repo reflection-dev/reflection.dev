@@ -144,6 +144,82 @@ pre {
 }
 pre code { background: transparent; padding: 0; border: 0; }
 
+/* ---- Prism syntax tokens ---- */
+:root[data-theme="dark"] {
+  --tok-comment:   #6b7789;
+  --tok-punct:     #98a3b3;
+  --tok-keyword:   #c792ea;
+  --tok-string:    #b7dc80;
+  --tok-number:    #f7a072;
+  --tok-function:  #82aaff;
+  --tok-property:  #7fb8ff;
+  --tok-variable:  #e6ecf3;
+  --tok-operator:  #c792ea;
+  --tok-class:     #ffcb6b;
+  --tok-builtin:   #82aaff;
+  --tok-tag:       #f07178;
+  --tok-attr:      #ffcb6b;
+  --tok-prompt:    #6b7789;
+}
+:root[data-theme="light"] {
+  --tok-comment:   #7a8ba3;
+  --tok-punct:     #4a5b73;
+  --tok-keyword:   #9333ea;
+  --tok-string:    #16803c;
+  --tok-number:    #b85c00;
+  --tok-function:  #0a5bcc;
+  --tok-property:  #0a5bcc;
+  --tok-variable:  #0a1729;
+  --tok-operator:  #9333ea;
+  --tok-class:     #a15c00;
+  --tok-builtin:   #0a5bcc;
+  --tok-tag:       #c2185b;
+  --tok-attr:      #a15c00;
+  --tok-prompt:    #7a8ba3;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata { color: var(--tok-comment); font-style: italic; }
+.token.punctuation { color: var(--tok-punct); }
+.token.namespace { opacity: 0.75; }
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted { color: var(--tok-property); }
+.token.boolean,
+.token.number { color: var(--tok-number); }
+.token.selector,
+.token.attr-name,
+.token.char,
+.token.builtin,
+.token.inserted { color: var(--tok-builtin); }
+.token.string,
+.token.url,
+.language-css .token.string,
+.style .token.string { color: var(--tok-string); }
+.token.operator,
+.token.entity { color: var(--tok-operator); background: transparent; }
+.token.atrule,
+.token.attr-value,
+.token.keyword { color: var(--tok-keyword); }
+.token.function { color: var(--tok-function); }
+.token.class-name { color: var(--tok-class); }
+.token.regex,
+.token.important,
+.token.variable { color: var(--tok-variable); }
+.token.important,
+.token.bold { font-weight: 600; }
+.token.italic { font-style: italic; }
+
+/* language-console: dim the shell prompt marker */
+.language-console .token.punctuation:first-child,
+.language-console .token.operator {
+  color: var(--tok-prompt);
+}
+
 /* code-enhance.js wraps <pre> in .code-wrap with a header. */
 .code-wrap {
   margin: 1.25em 0;
@@ -312,6 +388,37 @@ th { background: var(--bg-elev); font-weight: 600; }
   align-items: start;
 }
 
+/* Scrollable panels get a thin, theme-aware bar (WebKit + Firefox). */
+.doc-sidebar,
+.doc-toc,
+.search-modal-results {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-gutter: stable;
+}
+.doc-sidebar::-webkit-scrollbar,
+.doc-toc::-webkit-scrollbar,
+.search-modal-results::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.doc-sidebar::-webkit-scrollbar-track,
+.doc-toc::-webkit-scrollbar-track,
+.search-modal-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+.doc-sidebar::-webkit-scrollbar-thumb,
+.doc-toc::-webkit-scrollbar-thumb,
+.search-modal-results::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+.doc-sidebar:hover::-webkit-scrollbar-thumb,
+.doc-toc:hover::-webkit-scrollbar-thumb,
+.search-modal-results:hover::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+}
+
 /* Left sidebar */
 .doc-sidebar {
   position: sticky;
@@ -460,7 +567,7 @@ th { background: var(--bg-elev); font-weight: 600; }
   font-weight: 400;
 }
 .doc-toc li a:hover { color: var(--fg); }
-.doc-toc-h3 a { padding-left: 1.4rem; font-size: 0.82rem; }
+.doc-toc li.doc-toc-h3 a { padding-left: 1.4rem; font-size: 0.82rem; color: var(--fg-subtle); }
 .doc-toc li a.active {
   color: var(--accent);
   border-left-color: var(--accent);
