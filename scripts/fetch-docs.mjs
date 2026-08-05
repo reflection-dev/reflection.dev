@@ -2,10 +2,20 @@
 /**
  * Fetch nixops docs into src/docs/nixops/.
  *
- * Structure and ordering come from the nixops repo itself: `_meta.json`
- * files at each folder level declare label + order of children (Nextra
- * convention). Per-page `prereq/time/outcome` live in each doc's own
- * YAML front matter.
+ * Structure comes from a single `docs/_meta.json` in the nixops repo,
+ * with section slug as key and {title, pages} as value. Key order = section
+ * order in the sidebar; `pages` order = order within the section.
+ *
+ *   {
+ *     "foundations": {
+ *       "title": "Foundations",
+ *       "pages": ["what-is-nix", "install-nix", ...]
+ *     },
+ *     ...
+ *   }
+ *
+ * Page title lives inside each page's own YAML front matter (`title:`),
+ * so the label is edited in one place next to the content it describes.
  *
  * Source resolution order:
  *   1. NIXOPS_DOCS env var (absolute path to a checked-out docs/ dir)
@@ -23,7 +33,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const DEST = join(ROOT, "src", "docs", "nixops");
 const NIXOPS_REPO = "https://github.com/reflection-dev/nixops.git";
-const META = "_meta.json";
 const URL_BASE = "/docs/nixops";
 
 function resolveSource() {
@@ -55,72 +64,79 @@ function resolveSource() {
   };
 }
 
-function loadMeta(dir) {
-  const p = join(dir, META);
+function loadManifest(srcRoot) {
+  const p = join(srcRoot, "_meta.json");
   if (!existsSync(p)) {
-    throw new Error(`[fetch-docs] missing ${META} in ${dir}`);
+    throw new Error(`[fetch-docs] missing _meta.json in ${srcRoot}`);
   }
   const parsed = JSON.parse(readFileSync(p, "utf8"));
   if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
-    throw new Error(`[fetch-docs] ${p} must be a JSON object of {key: label}`);
+    throw new Error(
+      `[fetch-docs] _meta.json must be an object of {sectionSlug: {title, pages}}`
+    );
   }
-  return parsed;
+  // Normalise to an ordered array of {slug, title, pages}. JSON key order is
+  // preserved by V8, so section order == file order.
+  return Object.entries(parsed).map(([slug, value]) => {
+    if (!value || typeof value !== "object" || !value.title || !Array.isArray(value.pages)) {
+      throw new Error(
+        `[fetch-docs] section "${slug}" needs {title, pages}: ${JSON.stringify(value)}`
+      );
+    }
+    return { slug, title: value.title, pages: value.pages };
+  });
 }
 
 function buildPages(srcRoot) {
-  const rootMeta = loadMeta(srcRoot);
-  const sections = [];
-  let globalOrder = 0;
-  let sectionOrder = 0;
+  const sections = loadManifest(srcRoot);
   const pages = [];
+  let globalOrder = 0;
 
-  for (const [sectionSlug, sectionLabel] of Object.entries(rootMeta)) {
-    const sectionDir = join(srcRoot, sectionSlug);
-    if (!existsSync(sectionDir)) {
-      throw new Error(
-        `[fetch-docs] section "${sectionSlug}" declared in root ${META} but ${sectionDir} does not exist`
-      );
-    }
-    const pageMeta = loadMeta(sectionDir);
-    sections.push({ slug: sectionSlug, label: sectionLabel, order: sectionOrder++ });
-
-    for (const [pageSlug, pageLabel] of Object.entries(pageMeta)) {
-      const file = join(sectionDir, `${pageSlug}.md`);
+  sections.forEach((section, sectionOrder) => {
+    section.pages.forEach((pageSlug) => {
+      const file = join(srcRoot, section.slug, `${pageSlug}.md`);
       if (!existsSync(file)) {
         throw new Error(
-          `[fetch-docs] ${META} in ${sectionSlug}/ lists "${pageSlug}" but ${file} is missing`
+          `[fetch-docs] _meta.json section "${section.slug}" lists "${pageSlug}" but ${file} is missing`
         );
       }
-      const isSectionIndex = pageSlug === "index" && sectionSlug === "overview";
-      // Overview/index becomes the docs root landing.
+      const raw = readFileSync(file, "utf8");
+      const parsed = matter(raw);
+      const title = parsed.data.title;
+      if (!title) {
+        throw new Error(
+          `[fetch-docs] ${section.slug}/${pageSlug}.md has no title: in front matter`
+        );
+      }
+      const isSectionIndex = pageSlug === "index" && section.slug === "overview";
       const permalink = isSectionIndex
         ? `${URL_BASE}/`
-        : `${URL_BASE}/${sectionSlug}/${pageSlug}/`;
+        : `${URL_BASE}/${section.slug}/${pageSlug}/`;
       pages.push({
-        sectionSlug,
-        sectionLabel,
-        sectionOrder: sectionOrder - 1,
+        sectionSlug: section.slug,
+        sectionTitle: section.title,
+        sectionOrder,
         slug: pageSlug,
-        title: pageLabel,
+        title,
+        time: parsed.data.time ?? null,
         order: globalOrder++,
         isSectionIndex,
-        file,
         permalink,
+        body: parsed.content,
       });
-    }
-  }
+    });
+  });
+
   return { sections, pages };
 }
 
 function rewriteLinks(body, currentSection, allPages) {
-  // Turn source-relative links (`../foundations/what-is-nix.md` or
-  // `what-is-nix.md`) into site-relative permalinks.
   return body.replace(
     /\]\(((?:\.\.\/)?[a-z0-9-_]+\/)?([a-z0-9-_]+)\.md(#[^)]*)?\)/gi,
     (whole, prefix, slug, anchor) => {
-      let targetSection;
-      if (!prefix) targetSection = currentSection;
-      else targetSection = prefix.replace(/[./]/g, "").replace(/^\.\.$/, "");
+      const targetSection = prefix
+        ? prefix.replace(/[./]/g, "").replace(/^\.\.$/, "")
+        : currentSection;
       const target = allPages.find(
         (p) => p.slug === slug && p.sectionSlug === targetSection
       );
@@ -140,25 +156,17 @@ function main() {
 
   const { sections, pages } = buildPages(src.path);
 
-  // Parse each page's own front matter (prereq/time/outcome).
-  for (const page of pages) {
-    const raw = readFileSync(page.file, "utf8");
-    const parsed = matter(raw);
-    page.data = parsed.data ?? {};
-    page.body = parsed.content;
-  }
-
   rmSync(DEST, { recursive: true, force: true });
   mkdirSync(DEST, { recursive: true });
 
   for (const page of pages) {
     const body = rewriteLinks(page.body, page.sectionSlug, pages)
-      .replace(/^#\s+.+?\n+/m, ""); // strip raw H1 -- layout renders title from frontmatter
+      .replace(/^#\s+.+?\n+/m, ""); // strip raw H1 -- layout renders `title` on its own
 
     const fm = [
       "---",
       `title: ${yamlValue(page.title)}`,
-      `section: ${yamlValue(page.sectionLabel)}`,
+      `section: ${yamlValue(page.sectionTitle)}`,
       `sectionSlug: ${yamlValue(page.sectionSlug)}`,
       `sectionOrder: ${page.sectionOrder}`,
       `order: ${page.order}`,
@@ -166,10 +174,9 @@ function main() {
       `layout: doc.njk`,
       `tags: nixops-docs`,
     ];
-    if (page.data.time) fm.push(`time: ${yamlValue(page.data.time)}`);
+    if (page.time) fm.push(`time: ${yamlValue(page.time)}`);
     fm.push("---", "");
 
-    // Preserve source tree under DEST so nothing collides.
     const destPath = page.isSectionIndex
       ? join(DEST, "index.md")
       : join(DEST, page.sectionSlug, `${page.slug}.md`);
