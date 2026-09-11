@@ -1,23 +1,137 @@
 ---
 layout: base.njk
+home: true
 title: null
+description: The open framework for AI-native companies — an always-on orchestrator for ephemeral agents, on infrastructure you own.
 ---
-<section class="hero">
-  <h1>{{ site.name }}</h1>
+<section class="lp-hero">
+  <div class="lp-hero-bg" aria-hidden="true"></div>
+  <div class="lp-container lp-hero-inner">
+    <span class="lp-eyebrow">Open source · Clojure &amp; Nix</span>
+    <h1 class="lp-title">The framework for<br /><span class="lp-grad">AI-native companies</span></h1>
+    <p class="lp-sub">
+      Describe your company's processes as deterministic Lisp, let an always-on
+      orchestrator spawn ephemeral agents for the parts that need judgement, and
+      run all of it on infrastructure you own.
+    </p>
+    <div class="lp-cta-row">
+      <a class="lp-btn lp-btn-primary" href="/docs/">Read the docs</a>
+      <a class="lp-btn lp-btn-ghost" href="{{ site.github }}" rel="noopener">GitHub ↗</a>
+    </div>
+    <ul class="lp-chips">
+      <li>Deterministic processes</li>
+      <li>Capability-scoped agents</li>
+      <li>Self-hosted</li>
+      <li>MIT licensed</li>
+    </ul>
+  </div>
 </section>
 
-<section>
-  <h2>Projects</h2>
-  <div class="projects">
-    {% for project in site.projects %}
-      <article class="project-card">
-        <h3>{{ project.name }}</h3>
-        <p>{{ project.tagline }}</p>
-        <div class="links">
-          <a href="{{ project.docs }}">Docs →</a>
-          <a href="{{ project.repo }}" rel="noopener">GitHub ↗</a>
+<section class="lp-lede">
+  <div class="lp-container">
+    <p>
+      An AI-native company runs on agents. Reflection makes them
+      <strong>trustworthy</strong>: deterministic processes, capability-scoped
+      agents, and infrastructure you own — top to bottom, open source.
+    </p>
+  </div>
+</section>
+
+<section class="lp-section">
+  <div class="lp-container">
+    <h2 class="lp-h2">One stack, top to bottom</h2>
+    <p class="lp-section-lead">
+      Each layer is a small, sharp tool you can adopt on its own — together they
+      run a company.
+    </p>
+    <div class="lp-stack">
+      <div class="lp-tier lp-tier-agents">
+        <div class="lp-tier-name">Ephemeral agents</div>
+        <div class="lp-tier-desc">
+          Spawned per task, boxed by a capability grant, gone when the work is done.
         </div>
-      </article>
-    {% endfor %}
+      </div>
+      <div class="lp-conn">↑ spawned &amp; scoped by</div>
+      <div class="lp-tier lp-tier-zeno">
+        <div class="lp-tier-name"><span>zeno</span> — orchestration</div>
+        <div class="lp-tier-desc">
+          An always-on orchestrator. Company processes in Lisp; every agent
+          reaches the world only through its own MCP.
+        </div>
+      </div>
+      <div class="lp-conn">↑ runs on</div>
+      <div class="lp-tier lp-tier-nixops">
+        <div class="lp-tier-name"><span>nixops</span> — infrastructure</div>
+        <div class="lp-tier-desc">
+          Your servers as code: reproducible, rollback-safe, self-hosted from
+          the metal up.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lp-section">
+  <div class="lp-container">
+    <h2 class="lp-h2">The stack</h2>
+    <p class="lp-section-lead">Open-source building blocks. Start with one; grow into the rest.</p>
+    <div class="lp-pillar-grid">
+      {% for project in site.projects %}
+        <article class="lp-pillar">
+          <div class="lp-pillar-icon">
+            {% if project.slug == "zeno" %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><circle cx="12" cy="3.6" r="1.6" /><circle cx="4.3" cy="18" r="1.6" /><circle cx="19.7" cy="18" r="1.6" /><path d="M12 9V5.2M10.2 13.7 6 16.6M13.8 13.7 18 16.6" /></svg>
+            {% elif project.slug == "nixops" %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="6" rx="1.5" /><rect x="3.5" y="14" width="17" height="6" rx="1.5" /><path d="M7 7h.01M7 17h.01" /></svg>
+            {% else %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8" /></svg>
+            {% endif %}
+          </div>
+          <div class="lp-pillar-role">{{ project.role }}</div>
+          <h3>{{ project.name }}</h3>
+          <p>{{ project.tagline }}</p>
+          <div class="lp-pillar-links">
+            <a href="{{ project.docs }}">Docs →</a>
+            <a href="{{ project.repo }}" rel="noopener">GitHub ↗</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="lp-section">
+  <div class="lp-container">
+    <h2 class="lp-h2">Principles</h2>
+    <p class="lp-section-lead">The beliefs the whole stack is built on.</p>
+    <div class="lp-principle-grid">
+      <div class="lp-principle">
+        <h4>Deterministic by default</h4>
+        <p>Processes are explicit Lisp. An agent is called only where no deterministic practice exists yet — not for everything.</p>
+      </div>
+      <div class="lp-principle">
+        <h4>Every agent boxed</h4>
+        <p>Each agent reaches the world through its own MCP and a deny-by-default grant. A prompt injection can't touch what wasn't granted.</p>
+      </div>
+      <div class="lp-principle">
+        <h4>Own your stack</h4>
+        <p>Self-hosted from the metal up. Your processes, your data, your servers — no platform in the middle.</p>
+      </div>
+      <div class="lp-principle">
+        <h4>Humans in the loop</h4>
+        <p>Communication is separated from work: an agent can ask a human and resume when the answer arrives, over whatever channel you use.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lp-cta-band">
+  <div class="lp-container lp-cta-inner">
+    <h2>Build a company that runs itself.</h2>
+    <p>Start with the orchestrator and grow the stack from there.</p>
+    <div class="lp-cta-row">
+      <a class="lp-btn lp-btn-primary" href="/docs/zeno/">Start with zeno</a>
+      <a class="lp-btn lp-btn-ghost" href="{{ site.github }}" rel="noopener">GitHub ↗</a>
+    </div>
   </div>
 </section>

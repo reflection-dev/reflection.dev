@@ -75,7 +75,7 @@
       </nav>
     </header>
 
-    <main class="site-main{% if wide %} site-main--wide{% endif %}">
+    <main class="site-main{% if wide %} site-main--wide{% endif %}{% if home %} site-main--home{% endif %}">
       {{ content | safe }}
     </main>
 
