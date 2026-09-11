@@ -2,7 +2,7 @@
 layout: base.njk
 wide: true
 ---
-{% set flat = collections.nixopsDocs %}
+{% set flat = collections[project + "Docs"] %}
 {% set prev = flat | adjacent(page.url, -1) %}
 {% set next = flat | adjacent(page.url, 1) %}
 {% set toc = content | toc %}
@@ -10,9 +10,9 @@ wide: true
 
 <article class="doc">
   <aside class="doc-sidebar">
-    <div class="doc-sidebar-title">nixops</div>
+    <div class="doc-sidebar-title">{{ project }}</div>
     <nav class="doc-sidebar-nav">
-      {% for group in collections.nixopsDocsBySection %}
+      {% for group in collections[project + "DocsBySection"] %}
         <div class="doc-section">
           <div class="doc-section-name">{{ group.name }}</div>
           <ol>

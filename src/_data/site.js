@@ -13,5 +13,13 @@ export default {
       repo: "https://github.com/reflection-dev/nixops",
       docs: "/docs/nixops/",
     },
+    {
+      slug: "zeno",
+      name: "zeno",
+      tagline:
+        "An always-on orchestrator for ephemeral agents — company processes in Lisp, every agent boxed behind its own MCP.",
+      repo: "https://github.com/reflection-dev/zeno",
+      docs: "/docs/zeno/",
+    },
   ],
 };
