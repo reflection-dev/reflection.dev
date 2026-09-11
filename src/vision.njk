@@ -12,176 +12,110 @@ description: A shared space where people think out loud and agents do the work �
     <p class="lp-sub">
       Companies are about to run on agents. The unit of work is no longer a
       person in a tab driving an assistant — it is a team and its agents sharing
-      one context: the same conversations, the same knowledge, the same audit
-      trail, the same servers.
-    </p>
-    <div class="lp-cta-row">
-      <a class="lp-btn lp-btn-primary" href="/docs/">Read the docs</a>
-      <a class="lp-btn lp-btn-ghost" href="{{ site.github }}" rel="noopener">GitHub ↗</a>
-    </div>
-  </div>
-</section>
-
-<section class="lp-lede">
-  <div class="lp-container">
-    <p>
-      We are building that substrate — <strong>open source, top to bottom</strong>.
-      A shared space where people think out loud and agents do the work,
-      reachable over any channel, on infrastructure you own.
+      one context.
     </p>
   </div>
 </section>
 
 <section class="lp-section">
-  <div class="lp-container">
-    <h2 class="lp-h2">What we believe</h2>
-    <p class="lp-section-lead">The convictions the whole stack is built on.</p>
-    <div class="lp-principle-grid">
-      <div class="lp-principle">
-        <h4>Agents belong to the team, not to a tab</h4>
+  <div class="manifesto">
+    <p class="manifesto-lede">
+      We are building the substrate for that team: a shared space where people
+      think out loud and agents do the work, reachable over any channel, on
+      infrastructure you own — <strong>open source, top to bottom</strong>.
+    </p>
+    <ol class="creed">
+      <li>
+        <h3>Agents belong to the team, not to a tab</h3>
         <p>
-          The personal-copilot model breaks the moment a team moves fast —
+          The personal-copilot model breaks the moment a team moves fast:
           divergent context, duplicated work, conflicts nobody asked to
-          reconcile. People think out loud and decide together in one shared
-          space, and agents live in that same space: reading the same
-          discussion, writing to the same knowledge base, working in the open.
-          Nothing to merge.
+          reconcile. We bet on the opposite. People decide together in one space,
+          and agents live in it too — reading the same discussion, writing to the
+          same knowledge base, working in the open. Nothing to merge.
         </p>
-      </div>
-      <div class="lp-principle">
-        <h4>Processes are code; judgement is borrowed</h4>
+      </li>
+      <li>
+        <h3>Processes are written down; judgement is borrowed</h3>
         <p>
-          A company's processes should be written down — explicit,
-          deterministic, inspectable. An always-on orchestrator runs them and
-          spawns an agent only for the parts that genuinely need judgement, then
-          tears it down when the task ends. An LLM where no deterministic
-          practice exists yet — not for everything.
+          A company's processes deserve to be explicit, deterministic, and
+          inspectable — not folded into a model's guesswork. An always-on
+          orchestrator runs the process and calls for judgement only where no
+          deterministic practice exists yet, spawning an agent for that one task
+          and tearing it down when it ends.
         </p>
-      </div>
-      <div class="lp-principle">
-        <h4>Capability is the hard part</h4>
+      </li>
+      <li>
+        <h3>Capability is the hard part, and we refuse to fake it</h3>
         <p>
           Inviting an agent into a conversation is trivial; making it actually
           <em>do the work</em> is the whole game. That takes a real harness —
           planning, tools, verification, recovery, parallelism — not a chat
-          bridge. We reuse the strongest available harness and agent
-          implementations instead of shipping a weaker copy of a solved problem.
+          bridge with a bot in it. We reuse the strongest harness and agent
+          implementations there are, rather than ship a weaker copy of a solved
+          problem.
         </p>
-      </div>
-      <div class="lp-principle">
-        <h4>Security is structural, not a setting</h4>
+      </li>
+      <li>
+        <h3>Security is the architecture, not a setting</h3>
         <p>
-          Every agent reaches back only through its own auto-generated MCP
-          exposing a deny-by-default capability grant. Secrets stay in the
-          orchestrator. A prompt injection cannot touch what was never granted.
-          Isolation is the architecture.
+          Every agent reaches back only through its own generated boundary,
+          exposing a deny-by-default set of capabilities. Secrets stay with the
+          orchestrator. A prompt injection cannot touch what was never granted —
+          because the reach was never there to begin with.
         </p>
-      </div>
-      <div class="lp-principle">
-        <h4>Meet people where they already are</h4>
+      </li>
+      <li>
+        <h3>Work leaves a trace</h3>
         <p>
-          Communication is a separate, pluggable layer, spoken over the tools
-          teams already trust — Discourse, Zulip, Telegram, GitHub issues,
-          email. An agent asks the team over whatever channel is already in use
-          and resumes when the answer lands. The team keeps its home; the agents
-          move in.
+          Decisions, messages, and changes land in one shared, readable history —
+          for the whole team and for future you. Work done in the open is work
+          you can review, replay, and trust.
         </p>
-      </div>
-      <div class="lp-principle">
-        <h4>Own your stack</h4>
+      </li>
+      <li>
+        <h3>We meet people where they already are</h3>
         <p>
-          Self-hosted from the metal up. Your processes, your data, your servers
-          — no platform sitting in the middle of your agent conversations.
+          Communication is its own layer, spoken over the tools teams already
+          trust. An agent asks the team over whatever channel is in use and
+          resumes when the answer lands. No new client to adopt, no protocol to
+          migrate to — the team keeps its home; the agents move in.
         </p>
-      </div>
-      <div class="lp-principle">
-        <h4>Reuse, don't reinvent</h4>
+      </li>
+      <li>
+        <h3>You own the whole stack</h3>
+        <p>
+          Self-hosted from the metal up. Your processes, your data, your servers.
+          No platform sitting in the middle of your agent conversations, and no
+          one who can turn them off.
+        </p>
+      </li>
+      <li>
+        <h3>We reuse, we don't reinvent</h3>
         <p>
           Best-in-class harness, mature communication software, proven
-          infrastructure primitives. We build the connective tissue and the
-          boundaries between them — not worse copies of what already works.
+          infrastructure. Our work is the connective tissue and the boundaries
+          between them — never a worse copy of what already works.
         </p>
-      </div>
-    </div>
+      </li>
+    </ol>
   </div>
 </section>
 
 <section class="lp-section">
-  <div class="lp-container">
-    <h2 class="lp-h2">One stack, top to bottom</h2>
-    <p class="lp-section-lead">
-      Each layer is independently useful, and each is swappable. Start with one;
-      grow into the rest.
+  <div class="manifesto-not">
+    <h2 class="lp-h2">What we are not building</h2>
+    <p>
+      Not another <strong>chat client</strong> to migrate to — we integrate with
+      the ones teams already run. Not a <strong>personal copilot</strong> — team
+      agents in shared context, not per-seat assistants in isolated tabs. Not a
+      <strong>closed platform</strong> — open source and self-hostable end to
+      end, with no third party in the middle. Not a <strong>monolith</strong> —
+      each piece stands alone; the framework is the seams between them.
     </p>
-    <div class="lp-stack">
-      <div class="lp-tier lp-tier-comms">
-        <div class="lp-tier-name">Communication</div>
-        <div class="lp-tier-desc">
-          The shared space. People discuss and decide over the channel they
-          already use — Discourse, Zulip, Telegram, GitHub issues, email — and
-          agents live in that same context.
-        </div>
-      </div>
-      <div class="lp-conn">↕ messages in · answers out</div>
-      <div class="lp-tier lp-tier-zeno">
-        <div class="lp-tier-name"><span>zeno</span> — orchestration</div>
-        <div class="lp-tier-desc">
-          Deterministic processes in Lisp spawn ephemeral, capability-scoped
-          agents. An agent can ask the team and resume when the reply lands.
-        </div>
-      </div>
-      <div class="lp-conn">↕ spawns · tears down</div>
-      <div class="lp-tier lp-tier-agents">
-        <div class="lp-tier-name">Harness</div>
-        <div class="lp-tier-desc">
-          The work itself: the strongest available agents, planning, tools,
-          verification, and recovery — boxed behind a per-agent capability grant.
-        </div>
-      </div>
-      <div class="lp-conn">↑ runs on</div>
-      <div class="lp-tier lp-tier-nixops">
-        <div class="lp-tier-name"><span>castle</span> / <span>nixops</span> — infrastructure</div>
-        <div class="lp-tier-desc">
-          Your servers as code: reproducible NixOS, encrypted disks,
-          rollback-safe deploys, declarative services — self-hosted from the
-          metal up.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="lp-section">
-  <div class="lp-container">
-    <h2 class="lp-h2">What this is not</h2>
-    <div class="lp-principle-grid">
-      <div class="lp-principle">
-        <h4>Not a new chat client</h4>
-        <p>We integrate with the ones teams already run; nothing to migrate to.</p>
-      </div>
-      <div class="lp-principle">
-        <h4>Not a personal copilot</h4>
-        <p>Team agents in shared context, not per-seat assistants in isolated tabs.</p>
-      </div>
-      <div class="lp-principle">
-        <h4>Not a closed platform</h4>
-        <p>Open source and self-hostable end to end, with no third party in the middle.</p>
-      </div>
-      <div class="lp-principle">
-        <h4>Not a monolith</h4>
-        <p>Each layer stands alone; the framework is the seams between them.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="lp-cta-band">
-  <div class="lp-container lp-cta-inner">
-    <h2>Build a company that runs itself.</h2>
-    <p>Start with the orchestrator and grow the stack from there.</p>
-    <div class="lp-cta-row">
-      <a class="lp-btn lp-btn-primary" href="/docs/zeno/">Start with zeno</a>
-      <a class="lp-btn lp-btn-ghost" href="{{ site.github }}" rel="noopener">GitHub ↗</a>
-    </div>
+    <p class="manifesto-sign">
+      This is the direction. The <a href="/">stack</a> is how we get there, and
+      the <a href="{{ site.github }}" rel="noopener">code</a> decides what's real.
+    </p>
   </div>
 </section>

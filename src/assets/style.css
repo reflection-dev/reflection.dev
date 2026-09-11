@@ -960,3 +960,54 @@ th { background: var(--bg-elev); font-weight: 600; }
   .lp-shift-grid { grid-template-columns: 1fr; }
   .lp-shift-arrow { transform: rotate(90deg); padding: 0.2rem 0; }
 }
+
+/* Manifesto (vision page) */
+.manifesto { max-width: 40rem; margin-inline: auto; }
+.manifesto-lede {
+  font-size: clamp(1.3rem, 1rem + 1.35vw, 1.9rem);
+  line-height: 1.42;
+  letter-spacing: -0.015em;
+  margin: 0 0 2.75rem;
+}
+.manifesto-lede strong { color: var(--accent); font-weight: 700; }
+.creed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: creed;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.creed li { position: relative; padding-left: 2.6rem; }
+.creed li::before {
+  counter-increment: creed;
+  content: counter(creed, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.2rem;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+.creed h3 {
+  font-size: var(--step-2);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem;
+}
+.creed p { margin: 0; color: var(--fg-muted); font-size: var(--step-1); line-height: 1.55; }
+.creed em { color: var(--fg); font-style: italic; }
+.manifesto-not { max-width: 40rem; margin-inline: auto; }
+.manifesto-not p { color: var(--fg-muted); font-size: var(--step-1); line-height: 1.6; margin: 0; }
+.manifesto-not strong { color: var(--fg); font-weight: 600; }
+.manifesto-sign {
+  max-width: 40rem;
+  margin: 2.75rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg-subtle);
+  font-size: 0.95rem;
+}
