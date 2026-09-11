@@ -842,6 +842,7 @@ th { background: var(--bg-elev); font-weight: 600; }
 }
 .lp-tier-agents { border-style: dashed; background: transparent; }
 .lp-tier-zeno { border-color: var(--callout-info-border); background: var(--callout-info-bg); }
+.lp-tier-comms { border-left: 3px solid var(--accent); }
 .lp-tier-name { font-weight: 700; font-size: var(--step-1); }
 .lp-tier-name span { color: var(--accent); }
 .lp-tier-desc { color: var(--fg-muted); font-size: 0.94rem; margin-top: 0.2rem; }

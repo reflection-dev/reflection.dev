@@ -2,7 +2,7 @@
 layout: base.njk
 home: true
 title: null
-description: The open framework for AI-native companies — an always-on orchestrator for ephemeral agents, on infrastructure you own.
+description: The open framework for AI-native companies — an always-on orchestrator for ephemeral agents, reachable over any channel, on infrastructure you own.
 ---
 <section class="lp-hero">
   <div class="lp-hero-bg" aria-hidden="true"></div>
@@ -21,8 +21,8 @@ description: The open framework for AI-native companies — an always-on orchest
     <ul class="lp-chips">
       <li>Deterministic processes</li>
       <li>Capability-scoped agents</li>
+      <li>Talk over any channel</li>
       <li>Self-hosted</li>
-      <li>MIT licensed</li>
     </ul>
   </div>
 </section>
@@ -41,22 +41,24 @@ description: The open framework for AI-native companies — an always-on orchest
   <div class="lp-container">
     <h2 class="lp-h2">One stack, top to bottom</h2>
     <p class="lp-section-lead">
-      Each layer is a small, sharp tool you can adopt on its own — together they
-      run a company.
+      From the channel you already use, down to the metal you own.
     </p>
     <div class="lp-stack">
-      <div class="lp-tier lp-tier-agents">
-        <div class="lp-tier-name">Ephemeral agents</div>
+      <div class="lp-tier lp-tier-comms">
+        <div class="lp-tier-name">Communication</div>
         <div class="lp-tier-desc">
-          Spawned per task, boxed by a capability grant, gone when the work is done.
+          Reach your agents where you already are — Discourse, Zulip, Telegram,
+          GitHub issues, email. Any channel a human likes; the framework doesn't
+          care which.
         </div>
       </div>
-      <div class="lp-conn">↑ spawned &amp; scoped by</div>
+      <div class="lp-conn">↕ messages in · answers out</div>
       <div class="lp-tier lp-tier-zeno">
         <div class="lp-tier-name"><span>zeno</span> — orchestration</div>
         <div class="lp-tier-desc">
-          An always-on orchestrator. Company processes in Lisp; every agent
-          reaches the world only through its own MCP.
+          Deterministic processes in Lisp spawn ephemeral, capability-scoped
+          agents. An agent can ask a human and resume when the reply lands —
+          over that same channel.
         </div>
       </div>
       <div class="lp-conn">↑ runs on</div>
@@ -91,7 +93,7 @@ description: The open framework for AI-native companies — an always-on orchest
           <h3>{{ project.name }}</h3>
           <p>{{ project.tagline }}</p>
           <div class="lp-pillar-links">
-            <a href="{{ project.docs }}">Docs →</a>
+            {% if project.docs %}<a href="{{ project.docs }}">Docs →</a>{% endif %}
             <a href="{{ project.repo }}" rel="noopener">GitHub ↗</a>
           </div>
         </article>
@@ -114,12 +116,12 @@ description: The open framework for AI-native companies — an always-on orchest
         <p>Each agent reaches the world through its own MCP and a deny-by-default grant. A prompt injection can't touch what wasn't granted.</p>
       </div>
       <div class="lp-principle">
-        <h4>Own your stack</h4>
-        <p>Self-hosted from the metal up. Your processes, your data, your servers — no platform in the middle.</p>
+        <h4>Meet humans where they are</h4>
+        <p>Communication is separated from work. An agent asks a human over whatever channel you already use — chat, Telegram, GitHub issues, email — and resumes when the answer lands.</p>
       </div>
       <div class="lp-principle">
-        <h4>Humans in the loop</h4>
-        <p>Communication is separated from work: an agent can ask a human and resume when the answer arrives, over whatever channel you use.</p>
+        <h4>Own your stack</h4>
+        <p>Self-hosted from the metal up. Your processes, your data, your servers — no platform in the middle.</p>
       </div>
     </div>
   </div>
