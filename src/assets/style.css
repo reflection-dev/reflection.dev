@@ -1017,3 +1017,41 @@ th { background: var(--bg-elev); font-weight: 600; }
   color: var(--fg-subtle);
   font-size: 0.95rem;
 }
+
+/* Hero with full-bleed background art (home first screen) */
+.lp-hero--art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: min(80vh, 720px);
+  overflow: hidden;
+}
+.lp-hero-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.6;
+}
+.lp-hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(72% 72% at 50% 46%, rgba(3, 8, 18, 0) 0%, rgba(3, 8, 18, 0.6) 100%),
+    linear-gradient(180deg, rgba(3, 8, 18, 0.78) 0%, rgba(3, 8, 18, 0.32) 34%, rgba(3, 8, 18, 0.9) 100%);
+}
+.lp-hero--art .lp-hero-inner { position: relative; z-index: 2; }
+.lp-hero--art .lp-eyebrow { color: #9cc6ff; }
+.lp-hero--art .lp-title { color: #eef2f7; }
+.lp-hero--art .lp-sub { color: #c6d2e2; }
+.lp-hero--art .lp-chips { color: #c6d2e2; }
+.lp-hero--art .lp-btn-ghost {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #eef2f7;
+}
+.lp-hero--art .lp-btn-ghost:hover { border-color: #7fb8ff; color: #7fb8ff; }

@@ -12,7 +12,8 @@
     {% if description %}<meta property="og:description" content="{{ description }}" />{% endif %}
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary" />
-    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin />
     <link
       rel="stylesheet"
@@ -36,16 +37,7 @@
   <body>
     <header class="site-header">
       <a class="site-title" href="/">
-        <svg class="site-mark" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-          <line x1="5.5" y1="3.5" x2="12" y2="12" stroke="currentColor" stroke-width="1.05" opacity="0.5" />
-          <line x1="18.5" y1="3.5" x2="12" y2="12" stroke="currentColor" stroke-width="1.05" opacity="0.5" />
-          <line x1="18.5" y1="20.5" x2="12" y2="12" stroke="currentColor" stroke-width="1.05" opacity="0.5" />
-          <line x1="5.5" y1="20.5" x2="12" y2="12" stroke="currentColor" stroke-width="1.05" opacity="0.5" />
-          <rect x="5.5" y="3.5" width="13" height="17" rx="2.08" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5" />
-          <rect x="8.1" y="6.9" width="7.8" height="10.2" rx="1.25" fill="none" stroke="currentColor" stroke-width="1.27" opacity="0.67" />
-          <rect x="9.66" y="8.94" width="4.68" height="6.12" rx="0.75" fill="none" stroke="currentColor" stroke-width="1.08" opacity="0.83" />
-          <rect x="10.6" y="10.16" width="2.81" height="3.67" rx="0.45" fill="currentColor" />
-        </svg>
+        <img class="site-mark" src="/assets/logo.png" alt="" width="24" height="24" aria-hidden="true" />
         <span>{{ site.name }}</span>
       </a>
       <nav class="site-nav">
