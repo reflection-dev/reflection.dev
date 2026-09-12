@@ -12,8 +12,7 @@
     {% if description %}<meta property="og:description" content="{{ description }}" />{% endif %}
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary" />
-    <link rel="icon" href="/assets/favicon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin />
     <link
       rel="stylesheet"
@@ -37,7 +36,10 @@
   <body>
     <header class="site-header">
       <a class="site-title" href="/">
-        <img class="site-mark" src="/assets/logo.png" alt="" width="24" height="24" aria-hidden="true" />
+        <svg class="site-mark" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20" rx="5" fill="currentColor" opacity="0.15" />
+          <path d="M7 7h6a4 4 0 010 8H7V7zm0 8v4M13 15l4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
         <span>{{ site.name }}</span>
       </a>
       <nav class="site-nav">
