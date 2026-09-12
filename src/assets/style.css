@@ -748,6 +748,12 @@ th { background: var(--bg-elev); font-weight: 600; }
   opacity: 0.5;
 }
 .lp-hero-inner { position: relative; z-index: 1; }
+.lp-hero-logo {
+  display: block;
+  margin: 0 auto 1.35rem;
+  width: clamp(72px, 11vw, 108px);
+  height: auto;
+}
 
 .lp-eyebrow {
   display: inline-block;
