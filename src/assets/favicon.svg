@@ -1,8 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="14" fill="#003366"/>
-  <rect x="11.00" y="11.00" width="42.00" height="42.00" rx="9.24" transform="rotate(0 32 32)" fill="none" stroke="#e8ecf1" stroke-width="3.40"/>
-  <rect x="16.46" y="16.46" width="31.08" height="31.08" rx="6.84" transform="rotate(22 32 32)" fill="none" stroke="#cedff5" stroke-width="2.86"/>
-  <rect x="20.50" y="20.50" width="23.00" height="23.00" rx="5.06" transform="rotate(44 32 32)" fill="none" stroke="#b4d2f8" stroke-width="2.40"/>
-  <rect x="23.49" y="23.49" width="17.02" height="17.02" rx="3.74" transform="rotate(66 32 32)" fill="none" stroke="#99c5fc" stroke-width="2.02"/>
-  <rect x="25.70" y="25.70" width="12.59" height="12.59" rx="2.77" transform="rotate(88 32 32)" fill="#7fb8ff"/>
+  <line x1="15.00" y1="10.00" x2="32.00" y2="32.00" stroke="#bed7f7" stroke-width="1.82"/>
+  <line x1="49.00" y1="10.00" x2="32.00" y2="32.00" stroke="#bed7f7" stroke-width="1.82"/>
+  <line x1="49.00" y1="54.00" x2="32.00" y2="32.00" stroke="#bed7f7" stroke-width="1.82"/>
+  <line x1="15.00" y1="54.00" x2="32.00" y2="32.00" stroke="#bed7f7" stroke-width="1.82"/>
+  <rect x="15.00" y="10.00" width="34.00" height="44.00" rx="5.44" fill="none" stroke="#e8ecf1" stroke-width="2.60"/>
+  <rect x="21.46" y="18.36" width="21.08" height="27.28" rx="3.37" fill="none" stroke="#cedff5" stroke-width="2.21"/>
+  <rect x="25.47" y="23.54" width="13.07" height="16.91" rx="2.09" fill="none" stroke="#b4d2f8" stroke-width="1.88"/>
+  <rect x="27.95" y="26.76" width="8.10" height="10.49" rx="1.30" fill="none" stroke="#99c5fc" stroke-width="1.60"/>
+  <rect x="29.49" y="28.75" width="5.02" height="6.50" rx="0.80" fill="#7fb8ff"/>
 </svg>
