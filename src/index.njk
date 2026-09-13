@@ -2,27 +2,28 @@
 layout: base.njk
 home: true
 title: null
-description: The open framework for AI-native companies — a shared space where teams think out loud and agents do the work, reachable over any channel, on infrastructure you own.
+description: An open framework for AI-native companies. zeno is an always-on orchestrator that runs your company's processes and puts agents to work in one space your whole team shares, on infrastructure you own.
 ---
 <section class="lp-hero">
   <div class="lp-hero-bg" aria-hidden="true"></div>
   <div class="lp-container lp-hero-inner">
-    <span class="lp-eyebrow">Open source · Clojure &amp; Nix</span>
-    <h1 class="lp-title">The framework for<br /><span class="lp-grad">AI-native companies</span></h1>
+    <span class="lp-eyebrow">Open source · Self-hosted</span>
+    <h1 class="lp-title">An open framework for<br /><span class="lp-grad">AI-native companies</span></h1>
     <p class="lp-sub">
-      Describe your company's processes as deterministic Lisp, let an always-on
-      orchestrator spawn ephemeral agents for the parts that need judgement, and
-      run all of it on infrastructure you own.
+      Meet <strong>zeno</strong> — an always-on orchestrator that runs your
+      company's processes and puts agents to work in one space your whole team
+      shares, on infrastructure you own. Describe the work once; it gets done.
     </p>
     <div class="lp-cta-row">
       <a class="lp-btn lp-btn-primary" href="/docs/">Read the docs</a>
       <a class="lp-btn lp-btn-ghost" href="{{ site.github }}" rel="noopener">GitHub ↗</a>
     </div>
     <ul class="lp-chips">
-      <li>Deterministic processes</li>
-      <li>Capability-scoped agents</li>
-      <li>Talk over any channel</li>
+      <li>One shared space</li>
+      <li>Deterministic by default</li>
+      <li>Cheaper the more it runs</li>
       <li>Self-hosted</li>
+      <li>Open source</li>
     </ul>
   </div>
 </section>
@@ -30,37 +31,39 @@ description: The open framework for AI-native companies — a shared space where
 <section class="lp-lede">
   <div class="lp-container">
     <p>
-      An AI-native company runs on agents. Reflection makes them
-      <strong>trustworthy</strong>: deterministic processes, capability-scoped
-      agents, and infrastructure you own — top to bottom, open source.
+      An AI-native company runs on agents. zeno makes them
+      <strong>trustworthy</strong> — working in the open where your team can see
+      them — and <strong>cheaper the more they run</strong>, on infrastructure
+      you own.
     </p>
   </div>
 </section>
 
 <section class="lp-section">
   <div class="lp-container">
-    <h2 class="lp-h2">Agents belong to the team, not to a tab</h2>
+    <h2 class="lp-h2">A team can't run on personal agents</h2>
     <p class="lp-section-lead">
-      The personal-agent model breaks the moment a team moves fast. Reflection
-      is built on the opposite bet.
+      Today's AI agents are personal, per-tab, and forgetful. That's fine for
+      one person — it breaks the moment a team tries to run real work on it.
     </p>
     <div class="lp-shift-grid">
       <div class="lp-shift-card lp-shift-old">
         <div class="lp-shift-label">The old way</div>
         <p>
           Everyone drives their own agent in their own tab, then merges the
-          results by hand. At speed it falls apart — divergent context,
-          duplicated work, and conflicts nobody asked to reconcile.
+          results by hand. Work diverges, nothing carries over from one task to
+          the next, security is bolted on afterward, and the whole thing lives
+          on someone else's platform.
         </p>
       </div>
       <div class="lp-shift-arrow" aria-hidden="true">→</div>
       <div class="lp-shift-card lp-shift-new">
-        <div class="lp-shift-label">With Reflection</div>
+        <div class="lp-shift-label">With zeno</div>
         <p>
-          People think out loud and decide together in one shared space. Agents
-          live in that same context — reading the same discussion, writing to
-          the same knowledge base — and do the work in the open. Team agents,
-          not personal ones. Nothing to merge.
+          One orchestrator runs your processes in a space the whole team shares.
+          Agents work in that same context — reading the same discussion,
+          writing to the same knowledge base — on infrastructure you own. Team
+          agents, not personal ones. Nothing to merge.
         </p>
       </div>
     </div>
@@ -69,34 +72,36 @@ description: The open framework for AI-native companies — a shared space where
 
 <section class="lp-section">
   <div class="lp-container">
-    <h2 class="lp-h2">One stack, top to bottom</h2>
+    <h2 class="lp-h2">One orchestrator at the center</h2>
     <p class="lp-section-lead">
-      From the channel you already use, down to the metal you own.
+      zeno is the always-on core. It runs your company's processes and calls in
+      an agent only for the parts that need judgement — each one given just the
+      access its task requires, and nothing more.
     </p>
     <div class="lp-stack">
       <div class="lp-tier lp-tier-comms">
-        <div class="lp-tier-name">Communication</div>
+        <div class="lp-tier-name">The shared space</div>
         <div class="lp-tier-desc">
-          The shared space. People discuss and decide over the channel they
-          already use — Discourse, Zulip, Telegram, GitHub issues, email — and
-          agents live in that same context.
+          Your team and its agents in one place, over the channels you already
+          use — chat, Telegram, GitHub issues, email.
         </div>
       </div>
       <div class="lp-conn">↕ messages in · answers out</div>
       <div class="lp-tier lp-tier-zeno">
-        <div class="lp-tier-name"><span>zeno</span> — orchestration</div>
+        <div class="lp-tier-name"><span>zeno</span> — the orchestrator</div>
         <div class="lp-tier-desc">
-          Deterministic processes in Lisp spawn ephemeral, capability-scoped
-          agents. An agent can ask the team and resume when the reply lands —
-          over that same channel.
+          Runs your processes, spawns short-lived, scoped agents for the
+          judgement calls, and asks the team when it needs a decision — picking
+          up right where it left off when the reply lands.
         </div>
       </div>
-      <div class="lp-conn">↑ runs on</div>
-      <div class="lp-tier lp-tier-nixops">
-        <div class="lp-tier-name"><span>nixops</span> — infrastructure</div>
+      <div class="lp-conn">↑ helped by</div>
+      <div class="lp-tier">
+        <div class="lp-tier-name">What helps you run it</div>
         <div class="lp-tier-desc">
-          Your servers as code: reproducible, rollback-safe, self-hosted from
-          the metal up.
+          <strong>nixops</strong> stands zeno up on servers you own.
+          <strong>Machines</strong> are ready-made workflows — like publishing
+          or research — you drop in to fill it with work.
         </div>
       </div>
     </div>
@@ -105,8 +110,102 @@ description: The open framework for AI-native companies — a shared space where
 
 <section class="lp-section">
   <div class="lp-container">
-    <h2 class="lp-h2">The stack</h2>
-    <p class="lp-section-lead">Open-source building blocks. Start with one; grow into the rest.</p>
+    <h2 class="lp-h2">What it runs today</h2>
+    <p class="lp-section-lead">
+      Not a mockup. Here's a real setup running now — a small team's publishing
+      pipeline, run end to end by agents they talk to like teammates.
+    </p>
+    <div class="lp-stack">
+      <div class="lp-tier lp-tier-comms">
+        <div class="lp-tier-name">1 · You write a note</div>
+        <div class="lp-tier-desc">
+          Someone drops a short note in the team's chat channel.
+        </div>
+      </div>
+      <div class="lp-conn">↓</div>
+      <div class="lp-tier lp-tier-zeno">
+        <div class="lp-tier-name">2 · Agents publish it</div>
+        <div class="lp-tier-desc">
+          They translate it, publish it to the team's website and its broadcast
+          channel, and reply the links right back into the chat thread.
+        </div>
+      </div>
+      <div class="lp-conn">↓</div>
+      <div class="lp-tier">
+        <div class="lp-tier-name">3 · And research it</div>
+        <div class="lp-tier-desc">
+          Another agent reads the new post and files what it learned into the
+          team's linked knowledge wiki.
+        </div>
+      </div>
+    </div>
+    <p class="lp-section-lead">
+      Every one of them is a bot the team chats with, running on their own
+      servers. If a step fails halfway, the next run picks up where it left off
+      instead of doing the work twice.
+      <a href="/docs/zeno/">See how it works →</a>
+    </p>
+  </div>
+</section>
+
+<section class="lp-section">
+  <div class="lp-container">
+    <h2 class="lp-h2">It gets cheaper the more it runs</h2>
+    <p class="lp-section-lead">
+      Most AI agents are goldfish — they solve every task from scratch and
+      forget it the moment it's done.
+    </p>
+    <div class="lp-shift-grid">
+      <div class="lp-shift-card lp-shift-old">
+        <div class="lp-shift-label">Goldfish</div>
+        <p>
+          Do the same job a thousand times and you pay full price a thousand
+          times. Nothing carries over. The cost never comes down.
+        </p>
+      </div>
+      <div class="lp-shift-arrow" aria-hidden="true">→</div>
+      <div class="lp-shift-card lp-shift-new">
+        <div class="lp-shift-label">A company that remembers</div>
+        <p>
+          zeno turns work it has already figured out into reusable process. The
+          first run is the expensive one; after that, repeats run on their own —
+          cheaper and faster every time. Experience becomes an asset that grows
+          with use.
+        </p>
+      </div>
+    </div>
+    <p class="lp-section-lead">
+      Cost-per-task falling as volume grows is the bet we're building toward —
+      proven out one working workflow at a time, not a number we're quoting.
+    </p>
+  </div>
+</section>
+
+<section class="lp-section">
+  <div class="lp-container">
+    <h2 class="lp-h2">Why it's different</h2>
+    <p class="lp-section-lead">Three things most agent tools don't give a team at once.</p>
+    <div class="lp-principle-grid">
+      <div class="lp-principle">
+        <h4>Not a personal tab</h4>
+        <p>Personal agent apps give each person a private assistant. zeno is one shared space for the whole team, so work doesn't diverge and there's nothing to merge by hand.</p>
+      </div>
+      <div class="lp-principle">
+        <h4>Not per-task glue</h4>
+        <p>Other tools wire up each workflow by hand, every time. zeno's processes are deterministic and compounding, and every agent is scoped to just what its task needs.</p>
+      </div>
+      <div class="lp-principle">
+        <h4>Not a closed platform</h4>
+        <p>No service in the middle. zeno is open source and self-hosted — your processes, your data, your servers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lp-section">
+  <div class="lp-container">
+    <h2 class="lp-h2">The open-source pieces</h2>
+    <p class="lp-section-lead">zeno is the product. The rest of the stack exists to make it easy to run. Start with zeno; add the others when you need them.</p>
     <div class="lp-pillar-grid">
       {% for project in site.projects %}
         <article class="lp-pillar">
@@ -143,11 +242,11 @@ description: The open framework for AI-native companies — a shared space where
       </div>
       <div class="lp-principle">
         <h4>Deterministic by default</h4>
-        <p>Processes are explicit Lisp. An agent is called only where no deterministic practice exists yet — not for everything.</p>
+        <p>Spell out the routine once and it runs the same way every time. An agent is called in only where something genuinely needs judgement — not for everything.</p>
       </div>
       <div class="lp-principle">
         <h4>Security by design</h4>
-        <p>Security is structural, not bolted on. Every agent gets its own auto-generated MCP exposing a deny-by-default capability grant — secrets stay in the orchestrator, and a prompt injection can't reach what was never granted.</p>
+        <p>Security is built into the structure, not bolted on. Each agent gets only the access its task needs and nothing more — secrets stay with the orchestrator, so a stray instruction can't reach what was never handed over.</p>
       </div>
       <div class="lp-principle">
         <h4>Meet humans where they are</h4>

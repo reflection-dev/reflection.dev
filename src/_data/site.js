@@ -9,18 +9,18 @@ export default {
     {
       slug: "zeno",
       name: "zeno",
-      role: "Orchestration",
+      role: "The orchestrator",
       tagline:
-        "An always-on orchestrator for ephemeral agents — company processes in Lisp, every agent boxed behind its own MCP.",
+        "The always-on core. Runs your company's processes and puts scoped, short-lived agents to work in one space your whole team shares.",
       repo: "https://github.com/reflection-dev/zeno",
       docs: "/docs/zeno/",
     },
     {
       slug: "nixops",
       name: "nixops",
-      role: "Infrastructure",
+      role: "Helps you run it",
       tagline:
-        "Generic NixOS fleet base — inventory-driven modules, deploy-rs and sops-nix wiring, nixos-anywhere bootstrap.",
+        "Stands zeno up on servers you own — your infrastructure as code, reproducible and safe to roll back.",
       repo: "https://github.com/reflection-dev/nixops",
       docs: "/docs/nixops/",
     },
